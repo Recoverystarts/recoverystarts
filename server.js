@@ -32,8 +32,18 @@ app.use(
   })
 );
 
-// --- Serve your landing page (put index.html in ./public) ---
-app.use(express.static("public"));
+// --- Serve static files ---
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, "public")));
+
+// fallback for root
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 // --- Chat endpoint ---
 app.post("/api/chat", async (req, res) => {
