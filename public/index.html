@@ -1,32 +1,370 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>RecoveryStarts</title>
-  <meta name="description" content="RecoveryStarts — clear next steps to get help now." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RecoveryStarts — Find Real Help Fast</title>
+  <meta name="description" content="RecoveryStarts connects people to real, human recovery resources fast. Find meetings, tools, and support across AA, NA, SMART, Recovery Dharma, and more." />
+  <link rel="icon" href="/favicon.ico" />
+  <meta property="og:title" content="RecoveryStarts — Find Real Help Fast" />
+  <meta property="og:description" content="Find meetings and resources near you. Clean, fast, no fluff." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://recoverystarts.com/" />
+  <meta property="og:image" content="/og-image.jpg" />
   <style>
-    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:0; padding:0; }
-    header { padding:32px; text-align:center; }
-    main { max-width:900px; margin:0 auto; padding:24px; }
-    .btn { display:inline-block; padding:12px 18px; border-radius:12px; border:1px solid #ddd; text-decoration:none; }
-    footer { text-align:center; padding:24px; color:#666; font-size:14px; }
+    /* ---- CSS Reset (trimmed) ---- */
+    *,*::before,*::after{box-sizing:border-box}html,body{height:100%}body{margin:0;line-height:1.5;-webkit-font-smoothing:antialiased}
+    img,svg,video,canvas{display:block;max-width:100%}input,button,textarea,select{font:inherit}a{text-decoration:none;color:inherit}
+
+    /* ---- Theme & tokens ---- */
+    :root{
+      --bg: #0b0b0d;
+      --panel: #131318;
+      --panel-2: #181a20;
+      --text: #e8e8ef;
+      --muted: #b6b6c7;
+      --brand: #7C3AED; /* purple */
+      --brand-2: #A78BFA; /* lighter */
+      --ok: #10B981;
+      --warn: #F59E0B;
+      --err: #EF4444;
+      --ring: rgba(124,58,237,.5);
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --maxw: 1200px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#0b0b0d; --panel:#131318; --panel-2:#181a20; --text:#e8e8ef; --muted:#b6b6c7; }
+    }
+
+    body{background: radial-gradient(1200px 600px at 80% -10%, rgba(124,58,237,0.25), transparent 55%),
+                         radial-gradient(1000px 500px at -10% -20%, rgba(16,185,129,0.15), transparent 50%),
+                         var(--bg);
+         color: var(--text);
+         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    .container{max-width: var(--maxw); margin: 0 auto; padding: 0 20px}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:white;border:0;border-radius:999px;padding:12px 18px;font-weight:600;box-shadow:var(--shadow);transition:filter .15s ease;cursor:pointer}
+    .btn:hover{filter:brightness(1.05)}
+    .btn.secondary{background:transparent;outline:1px solid rgba(255,255,255,.12)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(124,58,237,.12);color:#DAD6FF;border:1px solid rgba(124,58,237,.35);font-size:12px;font-weight:600}
+    .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:#0f0f14;border:1px solid #23232f;color:#c9c9de;font-size:12px}
+
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(10px);background:linear-gradient(180deg, rgba(19,19,24,.9), rgba(19,19,24,.55));border-bottom:1px solid rgba(255,255,255,.06);z-index:50}
+    .nav{display:flex;justify-content:space-between;align-items:center;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800}
+    .logo-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--brand),#4f46e5);display:grid;place-items:center;box-shadow:0 6px 16px rgba(124,58,237,.35)}
+    .logo-mark svg{width:18px;height:18px}
+    nav a{color:var(--muted);padding:8px 12px;border-radius:8px}
+    nav a.active, nav a:hover{color:var(--text);background:rgba(255,255,255,.06)}
+
+    .hero{padding:80px 0}
+    .hero .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+    .h1{font-size:clamp(28px,4.2vw,56px);line-height:1.05;margin:0 0 16px;font-weight:900}
+    .lead{color:var(--muted);font-size:clamp(16px,1.8vw,20px);max-width:60ch}
+    .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    @media (max-width: 980px){ .hero .wrap{grid-template-columns:1fr} .grid-4{grid-template-columns:1fr 1fr} }
+    @media (max-width: 720px){ .grid-3{grid-template-columns:1fr} .grid-4{grid-template-columns:1fr} .grid-2{grid-template-columns:1fr} }
+
+    section{padding:36px 0}
+    .section-title{font-size:24px;margin:4px 0 14px}
+    .sub{color:var(--muted);margin:0 0 8px}
+    .list{display:flex;flex-direction:column;gap:8px}
+    .check{display:flex;gap:10px;align-items:flex-start}
+    .check svg{flex:0 0 18px;margin-top:4px}
+
+    footer{padding:30px 0;border-top:1px solid rgba(255,255,255,.06);color:#bdbdd2}
+
+    /* ---- Chat widget ---- */
+    .chat-toggle{position:fixed;right:18px;bottom:18px;z-index:60}
+    .chat-fab{width:58px;height:58px;border-radius:50%;border:0;background:var(--brand);color:white;display:grid;place-items:center;box-shadow:0 12px 30px rgba(0,0,0,.45);cursor:pointer}
+    .chat-fab:focus-visible{outline:3px solid var(--ring)}
+
+    .chat-panel{position:fixed;right:18px;bottom:88px;width:min(380px,90vw);max-height:min(70vh,720px);display:none;flex-direction:column;overflow:hidden;border-radius:20px;background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 60px rgba(0,0,0,.5);z-index:60}
+    .chat-panel.open{display:flex}
+    .chat-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .chat-body{padding:12px;height:360px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+    .msg{max-width:85%;padding:10px 12px;border-radius:14px;line-height:1.35;font-size:14px}
+    .msg.user{align-self:flex-end;background:#2b2b35}
+    .msg.bot{align-self:flex-start;background:#20202a}
+    .chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,.08)}
+    .chat-input input{flex:1;background:#0f0f15;border:1px solid #2a2a36;border-radius:12px;padding:10px;color:var(--text)}
+    .chat-input button{border-radius:12px;border:0;padding:10px 14px;background:var(--brand);color:white;font-weight:600}
+    .chat-hint{font-size:12px;color:#9aa0ae;padding:0 12px 12px}
+
+    /* ---- Utility ---- */
+    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "RecoveryStarts",
+    "url": "https://recoverystarts.com/",
+    "logo": "https://recoverystarts.com/logo.png",
+    "sameAs": ["https://www.facebook.com/RecoveryStarts", "https://www.youtube.com/@RecoveryStarts"]
+  }
+  </script>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <h1>RecoveryStarts</h1>
-    <p>Find a meeting. Contact support. First steps, no fluff.</p>
-    <a class="btn" href="/#get-help">Get Help</a>
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <a class="logo" href="#top" aria-label="RecoveryStarts home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 19L12 5l7 14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 19h6" stroke="white" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>Recovery<span style="color:var(--brand-2)">Starts</span></span>
+      </a>
+      <nav class="hide-sm">
+        <a href="#programs" class="active">Programs</a>
+        <a href="#how">How it works</a>
+        <a href="#resources">Resources</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
   </header>
-  <main>
-    <h2 id="get-help">Start here</h2>
-    <ul>
-      <li><a href="https://www.aa.org/meeting-guide-app" target="_blank" rel="noopener">AA Meetings</a></li>
-      <li><a href="https://na.org/meetingsearch/find-na/" target="_blank" rel="noopener">NA Meetings</a></li>
-      <li><a href="https://smartrecovery.org/meeting" target="_blank" rel="noopener">SMART Recovery</a></li>
-    </ul>
+
+  <!-- Hero -->
+  <main id="top" class="hero">
+    <div class="container wrap">
+      <div>
+        <span class="badge" aria-label="Fast access">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 11l8-8M21 3l-6 18-4-8-8-4 18-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Find real help fast
+        </span>
+        <h1 class="h1">Recovery starts with one click. No sign‑ups. No spam.</h1>
+        <p class="lead">Use our directory to reach meetings and resources across AA, NA, SMART, Recovery Dharma, and more. We show paths. You choose your next step.</p>
+        <div class="cta">
+          <a class="btn" href="#programs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Browse programs</a>
+          <a class="btn secondary" href="#resources">See resources</a>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h2 class="section-title">Quick links</h2>
+          <div class="grid-2">
+            <a class="card" href="#" aria-label="AA meeting guide placeholder"><strong>AA Meeting Guide</strong><span class="sub">Open app or web</span><span class="pill">placeholder</span></a>
+            <a class="card" href="#" aria-label="NA meeting search placeholder"><strong>NA Meeting Search</strong><span class="sub">North America</span><span class="pill">placeholder</span></a>
+            <a class="card" href="#" aria-label="SMART Recovery placeholder"><strong>SMART Recovery</strong><span class="sub">Global groups</span><span class="pill">placeholder</span></a>
+            <a class="card" href="#" aria-label="Recovery Dharma placeholder"><strong>Recovery Dharma</strong><span class="sub">Meditation based</span><span class="pill">placeholder</span></a>
+          </div>
+          <p class="sub" style="margin-top:8px">Replace the <span class="pill">placeholder</span> links with live directories later.</p>
+        </div>
+      </div>
+    </div>
   </main>
-  <footer>© RecoveryStarts</footer>
+
+  <!-- Programs -->
+  <section id="programs">
+    <div class="container">
+      <p class="sub">Programs</p>
+      <h2 class="section-title">Multiple paths. One goal: sobriety.</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>AA</h3>
+          <p class="sub">12‑step, alcohol focused. Global reach. Peer‑led.</p>
+          <ul class="list">
+            <li class="check"> 
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
+              Daily meetings online and in‑person
+            </li>
+            <li class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>Sponsor support</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>NA</h3>
+          <p class="sub">12‑step for all substances. Strong peer network.</p>
+          <ul class="list">
+            <li class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>Meeting finder by city</li>
+            <li class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>Literature and readings</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>SMART & Dharma</h3>
+          <p class="sub">Evidence‑based and mindfulness paths. Tools focused.</p>
+          <ul class="list">
+            <li class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>Worksheets and skills</li>
+            <li class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>Meditation practices</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="container">
+      <p class="sub">How it works</p>
+      <h2 class="section-title">Three steps. Start now.</h2>
+      <div class="grid-3">
+        <div class="card"><strong>1) Pick a path</strong><p class="sub">Choose a program that fits. No accounts.</p></div>
+        <div class="card"><strong>2) Join a meeting</strong><p class="sub">Online or local. Today is fine.</p></div>
+        <div class="card"><strong>3) Keep going</strong><p class="sub">One day at a time. Come back.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section id="resources">
+    <div class="container">
+      <p class="sub">Resources</p>
+      <h2 class="section-title">Tools for day one and day one‑thousand.</h2>
+      <div class="grid-4">
+        <div class="card"><strong>Beginner’s guide</strong><p class="sub">What to expect at your first meeting.</p></div>
+        <div class="card"><strong>Family & allies</strong><p class="sub">How to support without enabling.</p></div>
+        <div class="card"><strong>Hotlines</strong><p class="sub">Crisis numbers and chat. Region‑based.</p></div>
+        <div class="card"><strong>Daily tools</strong><p class="sub">Reflections, journaling, and habits.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / CTA -->
+  <section id="contact">
+    <div class="container">
+      <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+        <div>
+          <h2 class="section-title">Add your local directory</h2>
+          <p class="sub">We’ll list it. Keep it simple. Keep it accurate.</p>
+        </div>
+        <form onsubmit="event.preventDefault(); alert('Form submit placeholder. Wire this to your backend later.');" style="display:flex;gap:10px;flex-wrap:wrap">
+          <label class="visually-hidden" for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" aria-label="Email" required style="background:#0f0f15;border:1px solid #2a2a36;border-radius:999px;padding:12px 16px;color:var(--text);min-width:240px"/>
+          <button class="btn" type="submit">Notify me</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div class="logo" aria-label="RecoveryStarts">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 19L12 5l7 14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 19h6" stroke="white" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>Recovery<span style="color:var(--brand-2)">Starts</span></span>
+      </div>
+      <nav style="display:flex;gap:14px;color:#9aa0ae">
+        <a href="#privacy">Privacy</a>
+        <a href="#terms">Terms</a>
+        <a href="#accessibility">Accessibility</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Chat Widget -->
+  <div class="chat-toggle">
+    <button class="chat-fab" id="chatOpenBtn" aria-label="Open chat" title="Chat">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12c0 4.418-4.03 8-9 8-1.11 0-2.17-.16-3.15-.45L3 21l1.54-4.2C4.2 15.4 4 14.72 4 14c0-4.418 4.03-8 9-8s8 3.582 8 6z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <section class="chat-panel" id="chatPanel" aria-live="polite" aria-label="Assistant chat">
+    <div class="chat-header">
+      <strong>Ask RecoveryStarts</strong>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="pill" title="Demo only">demo</span>
+        <button id="chatCloseBtn" class="btn secondary" style="padding:8px 12px;border-radius:10px">Close</button>
+      </div>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="msg bot">This is a demo chat. Type a question. We’ll wire it to GPT later.</div>
+    </div>
+    <div class="chat-hint">Do not share personal health information in this demo.</div>
+    <form class="chat-input" id="chatForm" autocomplete="off">
+      <label for="chatInput" class="visually-hidden">Message</label>
+      <input id="chatInput" name="message" placeholder="Ask about meetings, programs, or resources…" required />
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <script>
+    /*
+      Integration surface:
+      - Update window.chatConfig with your provider keys and model settings later.
+      - Implement chatProvider.send(text, history) to call your backend.
+      - Replace demo echo with real responses.
+    */
+    window.chatConfig = {
+      provider: 'openai',
+      model: 'gpt-4o-mini',
+      apiBase: '/api/chat', // change later
+      systemPrompt: 'You are a concise recovery directory assistant. Be direct. No medical advice.'
+    };
+
+    const chatPanel = document.getElementById('chatPanel');
+    const chatOpenBtn = document.getElementById('chatOpenBtn');
+    const chatCloseBtn = document.getElementById('chatCloseBtn');
+    const chatForm = document.getElementById('chatForm');
+    const chatBody = document.getElementById('chatBody');
+    const chatInput = document.getElementById('chatInput');
+
+    function openChat(){ chatPanel.classList.add('open'); chatInput.focus(); }
+    function closeChat(){ chatPanel.classList.remove('open'); }
+
+    chatOpenBtn.addEventListener('click', openChat);
+    chatCloseBtn.addEventListener('click', closeChat);
+
+    /** Simple message renderer **/
+    function renderMessage(role, text){
+      const div = document.createElement('div');
+      div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+      div.textContent = text;
+      chatBody.appendChild(div);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    /** Demo provider stub. Replace with real API call later. **/
+    const chatProvider = {
+      async send(text, history){
+        // TODO: Post to your backend: await fetch(window.chatConfig.apiBase, { ... })
+        // Echo demo with trivial routing
+        await new Promise(r => setTimeout(r, 350));
+        if (/meeting|where|find/i.test(text)) return 'Use the Programs section to pick AA, NA, SMART, or Dharma. We will add live links later.';
+        if (/help|start|first/i.test(text)) return 'Start with one meeting. Listen. Come back tomorrow.';
+        return 'Noted. This is a demo. We will wire real GPT here later.';
+      }
+    };
+
+    /** Chat submit **/
+    const history = [];
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = chatInput.value.trim();
+      if(!text) return;
+      renderMessage('user', text);
+      chatInput.value = '';
+      history.push({ role: 'user', content: text });
+      const thinking = '…';
+      renderMessage('bot', thinking);
+      const thinkingNode = chatBody.lastElementChild;
+      try {
+        const reply = await chatProvider.send(text, history);
+        thinkingNode.textContent = reply;
+        history.push({ role: 'assistant', content: reply });
+      } catch (err){
+        thinkingNode.textContent = 'Error. Try again later.';
+        console.error(err);
+      }
+    });
+
+    // Close chat with Escape
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && chatPanel.classList.contains('open')) closeChat(); });
+  </script>
 </body>
 </html>
